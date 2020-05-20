@@ -13,27 +13,31 @@ import java.util.Map;
  * <p>
  * Implementing this cache in (almost) the same manner as it was implemented during the lecture will result in extra points.
  */
-public class LruCache<K, V> {
-    private Map<K, V> cache;
+public class LruCache<K, V> extends LinkedHashMap<K, V> {
     private int capacity;
 
     public LruCache(int capacity) {
+        super(capacity, 1f, true);
         this.capacity = capacity;
-        this.cache = new LinkedHashMap<>(capacity, 1f, true);
     }
 
-    public V get(K key) {
-        return cache.get(key);
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > capacity;
     }
 
-    public void put(K key, V value) {
-        if (cache.size() == capacity) {
-            cache.remove(cache.keySet().iterator().next());
-        }
-        cache.put(key, value);
+    // Чтобы работал тест на 3 метода
+    @Override
+    public V get(Object key) {
+        return super.get(key);
+    }
+
+    @Override
+    public V put(K key, V value) {
+        return super.put(key, value);
     }
 
     public int elements() {
-        return cache.size();
+        return size();
     }
 }
